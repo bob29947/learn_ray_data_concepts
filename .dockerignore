@@ -1,0 +1,8 @@
+# Exclude git history and metadata from the build context.
+.git
+
+# Exclude Python bytecode cache directories.
+__pycache__
+
+# Exclude compiled Python bytecode files.
+*.pyc

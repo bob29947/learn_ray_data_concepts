@@ -1,0 +1,8 @@
+
+This build my image. Need to do if code ever changes
+
+docker build -t learn-ray-data .
+
+Running instance made from image  
+
+docker run --rm learn-ray-data

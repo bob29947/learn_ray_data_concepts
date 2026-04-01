@@ -1,0 +1,5 @@
+# Hidden macOS Finder metadata file for folder view settings.
+.DS_Store
+
+# Python bytecode cache directory generated automatically at runtime.
+__pycache__/
