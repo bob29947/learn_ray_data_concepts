@@ -1,3 +1,5 @@
 docker build -t learn-ray-data .
 
 docker run --rm learn-ray-data
+
+docker image prune

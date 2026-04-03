@@ -1,96 +1,163 @@
 # learn_ray_data_concepts
 
-## April 1, 2026
+Beginner-friendly exercises for learning Ray in a small Python project.
 
-Today I set up the starter foundation for this project so I can learn Ray Data without having to rebuild the environment from scratch later.
+## What this project does
 
-### What was added
+This repo is a lightweight sandbox for learning distributed computing concepts with Ray.
 
-#### `requirements.txt`
+Right now the main example compares two ways of doing the same work:
 
-Added:
+- normal sequential Python
+- Ray tasks executed with `@ray.remote`
 
-```txt
-ray[data]
+The example uses a tiny fake database of words plus a short artificial delay, so it is easier to see why parallel execution can finish faster.
+
+## Technologies used
+
+- Python 3.11
+- Ray with the `ray[data]` extra
+- Docker for repeatable local runs
+
+## Setup
+
+### Local Python setup
+
+Create and activate a virtual environment if you want an isolated local setup:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-How it works:
+Why this helps:
 
-This file tells Python which package to install for the project. In this case, it installs Ray with the Ray Data extras, so the environment is ready for Ray Data experiments when I start writing them.
+- the virtual environment keeps project dependencies separate from your system Python
+- `requirements.txt` installs Ray so the example scripts can run
 
-#### `main.py`
+### Docker setup
 
-Added:
-
-```python
-print("hello world")
-```
-
-How it works:
-
-This is the current entry point for the project. Right now it is intentionally simple and only prints `hello world`. The purpose is to confirm that the project runs correctly and that the Docker setup is wired to the right file.
-
-#### `Dockerfile`
-
-Added a Docker setup for running the project in a repeatable container.
-
-How it works:
-
-- `FROM python:3.11-slim` starts from a lightweight Python image
-- `WORKDIR /app` sets `/app` as the working directory inside the container
-- `COPY requirements.txt .` copies the dependency file in first
-- `RUN pip install --no-cache-dir -r requirements.txt` installs the project dependencies
-- `COPY . .` copies the rest of the project files into the container
-- `CMD ["python3", "main.py"]` makes the container run `main.py` when it starts
-
-The main benefit is that I do not need to remember local environment setup details every time. Docker gives me a consistent way to run the project.
-
-#### `useful_commands.txt`
-
-Added notes for the Docker commands I will probably want later.
-
-How it works:
-
-It stores the basic commands for rebuilding and running the container:
+If you prefer not to manage Python locally, you can use Docker instead:
 
 ```bash
 docker build -t learn-ray-data .
 docker run --rm learn-ray-data
 ```
 
-- The build command creates the Docker image
-- The run command starts a container from that image
-- `--rm` removes the container after it finishes
+Why Docker is useful here:
 
-#### `.gitignore`
+- it gives the project a repeatable runtime environment
+- it avoids redoing setup steps later
 
-Added ignore rules for local files that should not be committed.
+## Commands
 
-How it works:
+Run the sequential Python example:
 
-- `.DS_Store` is macOS metadata
-- `__pycache__/` is Python bytecode cache output
+```bash
+python3 ray_core_intro_example/01_python_sequential.py
+```
 
-This keeps the repo cleaner.
+Run the Ray task example:
 
-#### `.dockerignore`
+```bash
+python3 ray_core_intro_example/02_ray_tasks_basic.py
+```
 
-Added ignore rules for files that should not be copied into the Docker build context.
+Build the Docker image:
 
-How it works:
+```bash
+docker build -t learn-ray-data .
+```
 
-- `.git` is excluded so git history is not sent into the Docker build
-- `__pycache__` and `*.pyc` are excluded because Python cache files are not needed in the image
+Run the Docker container:
 
-This helps keep the build context smaller and avoids copying unnecessary files.
+```bash
+docker run --rm learn-ray-data
+```
 
-### Current state after today's work
+Clean up unused Docker images:
 
-The project is still very minimal, but the important setup is now in place:
+```bash
+docker image prune
+```
 
-- Ray Data is included as a dependency
-- The project has a Python entry point
-- The repo can be built and run with Docker
-- The basic commands are written down for later reference
+## Configuration
 
-Right now the project does not contain Ray Data logic yet. Today was mainly about getting the environment and project structure ready so future work is easier to start.
+There are currently no project-specific environment variables required to run the examples.
+
+The setup is intentionally simple:
+
+- `requirements.txt` defines the Python dependency
+- the `Dockerfile` defines the container environment
+
+## Project structure
+
+### `requirements.txt`
+
+Installs:
+
+```txt
+ray[data]
+```
+
+This prepares the project for Ray experiments now and Ray Data experiments later.
+
+### `Dockerfile`
+
+Builds a Python 3.11 container, installs dependencies, copies the repo into `/app`, and currently runs:
+
+```bash
+python3 ray_core_intro_example/01_python_sequential.py
+```
+
+That means the sequential intro example is the current default container entry point.
+
+### `main.py`
+
+Contains a minimal `hello world` placeholder. It is not the main script for the current learning exercises.
+
+### `ray_core_intro_example/00_shared.py`
+
+Holds the shared helper logic used by the intro scripts:
+
+- a fake in-memory database
+- `retrieve()`, which simulates work with `time.sleep()`
+- `print_runtime()`, which prints elapsed runtime and results
+
+This file exists so both example programs can reuse the same behavior and stay easy to compare.
+
+### `ray_core_intro_example/01_python_sequential.py`
+
+Runs the database lookups one by one using normal Python.
+
+This script is useful because it provides the baseline behavior before introducing Ray.
+
+### `ray_core_intro_example/02_ray_tasks_basic.py`
+
+Runs the same lookups as Ray tasks, then collects the results with `ray.get()`.
+
+This script shows the smallest useful step from plain Python to distributed task execution in Ray.
+
+### `useful_commands.txt`
+
+Stores a few Docker commands for quick reference:
+
+- build the image
+- run the container
+- prune unused images
+
+## What to expect
+
+- The sequential version should take longer because each lookup waits its turn.
+- The Ray version should usually finish faster because multiple lookups can run concurrently.
+
+## Current state
+
+The project is still intentionally small, but it already provides:
+
+- a reproducible environment
+- a plain Python baseline
+- a first Ray task example
+
+That makes it a good place to keep adding more Ray learning examples over time.
