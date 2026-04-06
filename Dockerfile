@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Run the sequential intro script when the container starts.
-CMD ["python3", "ray_core_intro_example/01_python_sequential.py"]
+CMD ["python3", "ray_core_intro_example/02_ray_tasks_basic.py"]

@@ -1,5 +1,9 @@
 docker build -t learn-ray-data .
 
-docker run --rm learn-ray-data
+docker run --rm --shm-size=3.19g learn-ray-data
+
+docker run --rm --shm-size=3.19g --entrypoint python3 learn-ray-data ray_core_intro_example/01_python_sequential.py
+docker run --rm --shm-size=3.19g --entrypoint python3 learn-ray-data ray_core_intro_example/02_ray_tasks_basic.py
+docker run --rm --shm-size=3.19g --entrypoint python3 learn-ray-data ray_core_intro_example/03_object_store.py
 
 docker image prune

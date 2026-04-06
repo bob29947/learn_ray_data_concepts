@@ -20,6 +20,11 @@ def load_shared() -> ModuleType:
 
 shared = load_shared()
 
+shared.print_database_references(
+    "01 database references:",
+    [shared.describe_database("01 driver shared.database", shared.database)],
+)
+
 start = time.time()
 data = [shared.retrieve(item) for item in range(8)]
 shared.print_runtime(data, start)
